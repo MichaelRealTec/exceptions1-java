@@ -43,6 +43,12 @@ public class Reservation {
 		this.checkOut = checkOut;
 	}
 	
+	public Reservation(Date checkIn, Date checkOut) {
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+	}
+	
+	
 	// Métodos
 	// Criando um método para calcular a duração dos dias
 	public long duration() {
@@ -53,9 +59,18 @@ public class Reservation {
 	}
 	
 	// Recebe duas datas novas e atualiza o checkin e checkout 
-	public void updateDates(Date checkIn, Date checkOut) {
+	public String updateDates(Date checkIn, Date checkOut) {
+		// Lógica de atualização
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for updates must be future dates";
+		} if (!checkOut.after(checkIn)) {
+			return "Check-out date must be after check-in date";
+		}
+		// Se passar da lógica atualiza o checkIn e checkOut
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null; // Se não tiver nenhum erro retorna nulo 
 	}
 	
 	// Imprimir no formato desejado
