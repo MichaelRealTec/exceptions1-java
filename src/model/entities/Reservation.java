@@ -1,7 +1,9 @@
 package model.entities;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.text.SimpleDateFormat;
+
+import model.exceptions.DomainException;
 
 public class Reservation {
 	// Atributos
@@ -37,18 +39,15 @@ public class Reservation {
 	}
 	
 	// Métodos Construtores
-	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+	public Reservation(Integer roomNumber, Date checkIn, Date checkOut)  {
+		if (!checkOut.after(checkIn)) {
+			throw new DomainException("Check-out date must be after check-in date");
+		}
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 	}
-	
-	public Reservation(Date checkIn, Date checkOut) {
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
-	}
-	
-	
+		
 	// Métodos
 	// Criando um método para calcular a duração dos dias
 	public long duration() {
@@ -59,18 +58,18 @@ public class Reservation {
 	}
 	
 	// Recebe duas datas novas e atualiza o checkin e checkout 
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut) {
 		// Lógica de atualização
 		Date now = new Date();
 		if (checkIn.before(now) || checkOut.before(now)) {
-			return "Reservation dates for updates must be future dates";
+			throw new DomainException("Reservation dates for updates must be future dates");
 		} if (!checkOut.after(checkIn)) {
-			return "Check-out date must be after check-in date";
+			throw new DomainException("Check-out date must be after check-in date");
 		}
 		// Se passar da lógica atualiza o checkIn e checkOut
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null; // Se não tiver nenhum erro retorna nulo 
+		 
 	}
 	
 	// Imprimir no formato desejado
